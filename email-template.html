@@ -1,0 +1,19 @@
+<html>
+<head>
+</head>
+<body>
+	<h3>Status Update</h3>
+
+	<p>{{ .Message }}</p>
+
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
+	<p>
+		You have received this email because you have been subscribed to our notification system.
+		 If you believe you didn't subscribe or want to stop receiving further emails from our notification system click on the link below:
+	</p>
+
+	<p><a href="{{ .Domain }}/unsubscribe?email={{ .Email }}">Unsubscribe</a></p>
+</body>
+</html>

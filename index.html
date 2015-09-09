@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Status Page</title>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+    $(function() {
+
+        function IsEmail(email) {
+          var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          return regex.test(email);
+        }
+
+        $('#js-add-email').on('click', function() {
+            if ($('#js-email').val()) {
+                var email = $('#js-email').val();
+                $('.alert-message').hide();
+
+                if (!IsEmail($('#js-email').val())) {
+                    $('#error-valid-email').show();
+                    return false;
+                }
+
+                $('#success-thank-you').show()
+                $('#js-email').val('');
+
+                $.get('/add-email?email=' + email);
+            }
+        });
+    });
+    </script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <style>
+        body {background-color: #f2f2f2; font-size: 14px;}
+        h3 {margin:0;}
+        header {background-color:#242b31; padding:40px;}
+        .container {width:650px;}
+    </style>
+  </head>
+
+  <body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">Status Updates</div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-{{ if eq .LatestMessage.Success true }}success{{ else }}danger{{ end }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ .LatestMessage.Timestamp }}</h4>
+                            <h3>{{ .LatestMessage.Text }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">&nbsp;</div>
+        <div class="alert alert-success alert-message" style="display: none;" id="success-thank-you">Thanks for subscribing! You'll receive an email when the status changes.</div>
+        <div class="alert alert-danger alert-mesage" style="display: none;" id="error-valid-email">Please enter a valid email address.</div>
+
+        <div class="row">
+            <div class="col-md-9"><input type="text" class="form-control" placeholder="Enter your email for status updates..." id="js-email"></div>
+            <div class="col-md-3"><button class="btn btn-primary form-control" id="js-add-email">Subscribe</button></div>
+        </div>
+
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
+
+        {{ if .Messages }}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><strong>Previous Incidents</strong></div>
+                        <ul class="list-group">
+                            {{range $index, $message := .Messages}}
+    				            {{ if eq $message.Success false }}
+    							    <li class="list-group-item">
+    					    			<h4>{{ $message.Timestamp }}</h4>
+    					        		<p>{{ $message.Text }}</p>
+    					    		</li>
+    				            {{ end }}
+    			             {{ end }}
+    	 				</ul>
+            		</div>
+            	</div>
+            </div>
+        {{ end }}
+    </div>
+  </body>
+  </html>
