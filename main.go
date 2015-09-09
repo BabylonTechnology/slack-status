@@ -52,8 +52,8 @@ var config = &Config{
 
 	domain: "",
 
-	email_from: "hello@doamin.com",
-	email_subject: "Status Update"
+	email_from: "hello@domain.com",
+	email_subject: "Status Update",
 }
 
 var port int
